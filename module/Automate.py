@@ -16,7 +16,12 @@ def WaitTillElementFound(element):
     except :
         driver.quit()
 
-def GetDriver():
+def ScrollDown(isDown):
+    body = driver.find_element_by_css_selector('body')
+    body.send_keys(Keys.PAGE_DOWN) if isDown else body.send_keys(Keys.PAGE_DOWN)
+    time.sleep(1)
+
+def LoadWebsite():
     driver.get('http://3.7.23.170/');
 
 def Login():
@@ -38,30 +43,33 @@ def FindNumberOfProjects():
     numberOfProjects = header.find_elements_by_tag_name("tr")
     return str(len(numberOfProjects))
 
-
+# Monday is td[3] and sunday is td[2]
 def EnterTime():
     day = date.today().weekday()
-    index = "";
     if(day == 6):
         dayIndex = 2;
     else:
         dayIndex = day + 3
-    index = dayIndex
-    timeBoxHour = driver.find_element_by_xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[2]/div[1]/div[1]/div[4]/div[5]/div[1]/div[1]/table[1]/tbody[3]/tr[1]/td["+str(index) +"]/input[1]")
-    timeBoxHour.click()
-    timeSplitted = timevalue.split(':')
-    timeBoxHour.send_keys(timeSplitted[0])
-    timeBoxHour.send_keys(Keys.TAB)
-    timeBoxHour.send_keys(timeSplitted[1])
+    row = 1
+    while(row <= len(timeList)):
+        if(row % 4 == 0):
+            ScrollDown(True)
+        try:
+            timeBoxHour = driver.find_element_by_xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[2]/div[1]/div[1]/div[4]/div[5]/div[1]/div[1]/table[1]/tbody[3]/tr["+str(row)+"]/td["+str(dayIndex) +"]/input[1]")
+            timeBoxHour.click()
+            timeSplitted = timeList[row-1].split(':')
+            timeBoxHour.send_keys(timeSplitted[0])
+            timeBoxHour.send_keys(Keys.TAB)
+            timeBoxHour.send_keys(timeSplitted[1])
+        except Exception as e:
+            print("Exception happend:" + str(e))
+        row+=1
 
 def LogOut():
-    body = driver.find_element_by_css_selector('body')
-    body.send_keys(Keys.PAGE_DOWN)
-    time.sleep(1)
+    ScrollDown(True)
     submitButton = driver.find_element_by_xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[2]/div[1]/div[1]/div[4]/div[5]/div[1]/div[1]/table[1]/tbody[4]/tr[3]/td[2]/div[1]/input[1]")
     submitButton.click()
-    body.send_keys(Keys.PAGE_UP)
-    time.sleep(1)
+    ScrollDown(False)
     profileButton = driver.find_element_by_xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/a[1]/span[1]")
     profileButton.click()
     logoutButton = WaitTillElementFound("/html[1]/body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/a[3]")
@@ -71,10 +79,9 @@ def QuitDriver():
     time.sleep(5)
     driver.quit()
 
-GetDriver()
+LoadWebsite()
 Login()
 NavigateToLogTime()
-FindNumberOfProjects()
 EnterTime()
 LogOut()
 QuitDriver()
