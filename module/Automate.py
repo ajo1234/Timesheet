@@ -1,4 +1,6 @@
+import os
 import time
+import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -7,6 +9,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from datetime import date
 
 driver = webdriver.Chrome(driverPath)
+
+def ReadJson():
+    f = open((os.path.dirname(os.path.abspath(__file__)) + "/Data.json"),)
+    data = json.load(f)
+    print(data)
+    global username
+    global password
+    global timeList
+    username = data[0]["Username"]
+    password = data[0]["Password"]
+    timeList = data[0]["Time"]
 
 def WaitTillElementFound(element):
     try:
@@ -79,6 +92,7 @@ def QuitDriver():
     time.sleep(5)
     driver.quit()
 
+ReadJson()
 LoadWebsite()
 Login()
 NavigateToLogTime()
