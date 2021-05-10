@@ -65,7 +65,7 @@ def EnterTime():
         dayIndex = day + 3
     row = 1
     while(row <= len(timeList)):
-        if(row % 4 == 0):
+        if(row % 5 == 0):
             ScrollDown(True)
         try:
             timeBoxHour = driver.find_element_by_xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[2]/div[1]/div[1]/div[4]/div[5]/div[1]/div[1]/table[1]/tbody[3]/tr["+str(row)+"]/td["+str(dayIndex) +"]/input[1]")
