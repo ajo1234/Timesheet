@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import date
 
-driver = webdriver.Chrome(driverPath)
+driver = webdriver.Chrome()
 
 def ReadJson():
     f = open((os.path.dirname(os.path.abspath(__file__)) + "/Data.json"),)

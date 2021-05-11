@@ -1,5 +1,9 @@
 import json
-import os.path
+import os
+import chromedriver_autoinstaller
+
+def CheckForChromeDriver():
+    chromedriver_autoinstaller.install()
 
 def CheckIfFileExists():
     return os.path.isfile(os.path.dirname(os.path.abspath(__file__)) + "/Data.json")
@@ -34,6 +38,7 @@ def WriteFile():
     k=input("Press any key to exit") 
 
 
+CheckForChromeDriver()
 if(CheckIfFileExists()):
     os.system("python "+ os.path.dirname(os.path.abspath(__file__)) + "/Automate.py 1")
 else:
